@@ -4,6 +4,6 @@ stages:
 
 install_job:
   stage: install
-  image: node22-alpine
+  image: node:22-alpine
   script: 
     - npm install
