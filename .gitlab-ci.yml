@@ -48,3 +48,4 @@ build_and_push_image:
   needs:
     - sonarqube_scan
 
+
