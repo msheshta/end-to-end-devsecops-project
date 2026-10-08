@@ -2,6 +2,10 @@
 stages:
   - test
   - quality
+  - build
+
+variables:
+  IMAGE_NAME: "$DOCKERHUB_USERNAME/end-to-end-devsecops-project:$CI_PIPELINE_IID"
 
 install_job:
   stage: test
@@ -28,3 +32,19 @@ sonarqube_scan:
     - sonar-scanner -Dsonar.host.url="${SONAR_HOST_URL}"
   allow_failure: true
   
+
+
+build_and_push_image:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:26-dind
+  before_script: 
+    - echo "$DOCKERHUB_TOKEN" | docker login -u $DOCKERHUB_USERNAME --password-stdin 
+  script: 
+    - docker build -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
+    - docker images
+  needs:
+    - sonarqube_scan
+
