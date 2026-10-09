@@ -3,6 +3,7 @@ stages:
   - test
   - quality
   - build
+  - security
 
 variables:
   IMAGE_NAME: "$DOCKERHUB_USERNAME/end-to-end-devsecops-project:$CI_PIPELINE_IID"
@@ -47,5 +48,18 @@ build_and_push_image:
     - docker images
   needs:
     - sonarqube_scan
+
+
+trivy_image_scan:
+  stage: security
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script: 
+    - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGE_NAME"
+  needs:
+    - build_and_push_image
+
+  
 
 
