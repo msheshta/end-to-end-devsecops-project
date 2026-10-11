@@ -79,4 +79,6 @@ deploy_to eks:
     - kubectl -n devops-project rollout status deployment/end-to-end-devops-project
   needs:
     - trivy_image_scan
-    
+
+
+
